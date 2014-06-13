@@ -54,6 +54,8 @@ CREATE TABLE IF NOT EXISTS `user` (
     `id`         int(10) unsigned NOT NULL auto_increment COMMENT 'ID',
     `grade_id`   int(10) unsigned NOT NULL                COMMENT '役職ID',
     `unit_id`    int(10) unsigned NOT NULL                COMMENT '部署ID',
+    `login_id`   varchar(36)      NOT NULL                COMMENT 'ログインID'  ,
+    `login_pass` varchar(36)      NOT NULL                COMMENT 'ログインPASS',
     `name`       varchar(30)      NOT NULL                COMMENT '名前',
     `mail`       varchar(255)     NOT NULL                COMMENT 'メール',
     `product`    text             NOT NULL DEFAULT ''     COMMENT '紹介文',
@@ -159,7 +161,7 @@ VALUES
 ('まあまあな部署'),
 ('ふつうの部署');
 
-INSERT INTO `user` (`grade_id`, `unit_id`, `name`, `mail`, `product`, `created_at`)
+INSERT INTO `user` (`grade_id`, `unit_id`, `login_id`, `login_pass`, `name`, `mail`, `product`, `created_at`)
 VALUES
-(1, 1, 'えらい太郎', 'test1@test.jp', '社長です', NOW()),
-(3, 2, 'まあまあ太郎', 'test2@test.jp', '部長です', NOW());
+(1, 1, 'syatyo', 'syatyo', 'えらい太郎', 'test1@test.jp', '社長です', NOW()),
+(3, 2, 'taro', 'taro', 'まあまあ太郎', 'test2@test.jp', '部長です', NOW());

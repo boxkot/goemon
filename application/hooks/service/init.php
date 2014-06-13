@@ -13,6 +13,9 @@ class Init
 
         //viewの設定うんたらくんたら
         $this->_CI->view = new view($this->_CI);
+
+        //必要なヘルパー読んでおく
+        $this->_CI->load->helper('model_operate');
     }
 }
 
@@ -121,7 +124,7 @@ class view
 
     public function getData()
     {
-        return (array) $this->_data;
+        return $this->_data;
     }
 
     public function setTemplatePath($path)

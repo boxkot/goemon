@@ -17,11 +17,19 @@ $hook['pre_system'] = array(
     'params'   => array(),
 );
 
-$hook['post_controller_constructor'] = array(
+$hook['post_controller_constructor'][] = array(
     'class'    => 'Init',
     'function' => 'setting',
     'filepath' => 'hooks/service',
     'filename' => 'init.php',
+    'params'   => array(),
+);
+
+$hook['post_controller_constructor'][] = array(
+    'class'    => 'Login',
+    'function' => 'confirm',
+    'filepath' => 'hooks/auth',
+    'filename' => 'login.php',
     'params'   => array(),
 );
 
