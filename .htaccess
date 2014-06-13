@@ -1,0 +1,4 @@
+RewriteEngine on
+RewriteCond $1 !^(index\.php|styles|user_guide|.\+.css$|.+\.gif$|.+\.jpg$|.+\.png$|.+\.js$)
+
+RewriteRule ^(.*)$ /goemon/index.php/$1 [L]
