@@ -2,13 +2,17 @@
 
 if (!function_exists('toColumn'))
 {
-    function toColumn($data)
+    function toColumn($data, $name = '')
     {
         $query = '';
-        foreach ($data as $key => $val) {
-            $query .= $val . ' as ' . $key . ',';
+        if (is_array($data)) {
+            foreach ($data as $key => $val) {
+                $query .= $val . ' as ' . $key . ',';
+            }
+
+            return substr($query, 0, -1);
         }
 
-        return substr($query, -1);
+        return $name . ' as ' . $data;
     }
 }

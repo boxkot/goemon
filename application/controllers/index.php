@@ -14,9 +14,11 @@ class index extends CI_Controller
 
     public function index()
     {
+        //ライブラリ読み込み
         $this->load->library('auth');
         $this->load->library('validate');
 
+        //ヘルパー読み込み
         $this->load->helper('url');
         $this->load->helper('form_operate');
 

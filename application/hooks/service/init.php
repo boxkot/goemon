@@ -21,6 +21,7 @@ class Init
 
 class view
 {
+    private $_CI             = null;
     private $_data           = array();
     private $_path           = '';
     private $_layoutPath     = '';
@@ -36,6 +37,8 @@ class view
 
     public function __construct($_CI)
     {
+        $this->_CI = $_CI;
+
         $_CI->load->config('view');
         $this->_viewPath = APPPATH . $this->_viewPath;
 
@@ -50,9 +53,6 @@ class view
                 throw new Exception("layout file {$this->_layoutPath} is not found");
             }
         }
-
-        $path = trim($_CI->controllerName . '/' . $_CI->actionName, '/');
-        $this->_path = $this->_getCorrectPath($path);
     }
 
     public function getBasePath()
@@ -62,7 +62,13 @@ class view
 
     public function getPath()
     {
-        return $this->_path;
+        $path = trim(
+            $this->_CI->controllerName . '/' . $this->_CI->actionName,
+            '/'
+        );
+        $path = $this->_getCorrectPath($path);
+
+        return $path;
     }
 
     public function getLayoutPath()

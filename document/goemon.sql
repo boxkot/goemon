@@ -62,7 +62,7 @@ CREATE TABLE IF NOT EXISTS `user` (
     `updated_at` timestamp        NOT NULL                COMMENT '更新日',
     `created_at` datetime         NOT NULL                COMMENT '作成日',
     PRIMARY KEY (`id`),
-    UNIQUE KEY (`name`),
+    UNIQUE KEY `uk_name` (`name`),
     CONSTRAINT `fk_user_grade_id`
         FOREIGN KEY (`grade_id`) REFERENCES `grade` (`id`),
     CONSTRAINT `fk_user_unit_id`
@@ -102,14 +102,14 @@ CREATE TABLE IF NOT EXISTS `report` (
 ) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_bin COMMENT 'レポート';
 
 -- テンプレート
-CREATE TABLE IF NOT EXISTS `report` (
+CREATE TABLE IF NOT EXISTS `template` (
     `id`         int(10) unsigned NOT NULL auto_increment COMMENT 'ID',
     `user_id`    int(10) unsigned NOT NULL                COMMENT 'ユーザID',
     `title`      varchar(100)     NOT NULL                COMMENT 'タイトル',
     `content`    text             NOT NULL                COMMENT '内容',
     `created_at` datetime         NOT NULL                COMMENT '作成日',
     PRIMARY KEY (`id`),
-    CONSTRAINT `fk_report_user_id`
+    CONSTRAINT `fk_template_user_id`
         FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_bin COMMENT 'テンプレート';
 
@@ -132,6 +132,7 @@ CREATE TABLE IF NOT EXISTS `read` (
     `report_id`  int(10) unsigned NOT NULL                COMMENT 'レポートID',
     `user_id`    int(10) unsigned NOT NULL                COMMENT 'ユーザID',
     PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_read` (`report_id`, `user_id`),
     CONSTRAINT `fk_read_report_id`
         FOREIGN KEY (`report_id`) REFERENCES `report` (`id`),
     CONSTRAINT `fk_read_user_id`

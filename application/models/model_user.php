@@ -10,7 +10,7 @@ class Model_user extends CI_Model
               ->from($this->_table)
               ->where('id', $id);
 
-        return $this->db->get()->result_array();
+        return $this->db->get()->row_array();
     }
 
     public function exists($id)
