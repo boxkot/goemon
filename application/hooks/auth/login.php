@@ -8,7 +8,7 @@ class Login
     {
         $this->_CI = &get_instance();
 
-        $this->_CI->load->library('auth');
+        $this->_CI->load->library('session', 'Auth');
 
         $this->_CI->load->helper('url');
 
@@ -17,20 +17,20 @@ class Login
         $authUser  = $this->_CI->config->config['auth']['auth_user'];
         $authAdmin = $this->_CI->config->config['auth']['auth_admin'];
 
-        if (in_array($this->_CI->controllerName, $authAdmin)) {
+        if (false) {
+            $this->_CI->load->library('auth', array('namespace' => 'Admin'));
             $this->_CI->load->model('Model_admin', 'admin', true);
-            if (!$this->_CI->auth->hasId()
-                || !$this->_CI->admin->exists($this->_CI->auth->getId())
+            if (!$this->_CI->auth_admin->hasId()
+                || !$this->_CI->admin->exists($this->_CI->auth_admin->getId())
             ) {
-                redirect('/');
+                redirect('/admin/');
             }
-        }
 
-
-        if (!in_array($this->_CI->controllerName, $authUser)) {
+            $this->_CI->load->library('auth', array('namespace' => 'User'));
             $this->_CI->load->model('Model_user', 'user', true);
+
             if (!$this->_CI->auth->hasId()
-                || !$this->_CI->user->exists($this->_CI->auth->getId())
+                && !$this->_CI->user->exists($this->_CI->auth->getId())
             ) {
                 redirect('/');
             }

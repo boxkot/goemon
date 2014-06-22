@@ -42,4 +42,29 @@ class Model_admin extends CI_Model
         return $this->db->get()->num_rows() === 1;
     }
 
+    public function getAll($search = array())
+    {
+        $column = array(
+            'id'      => 'a.id',
+            'name'    => 'a.name',
+            'auth_id' => 'a.auth_id',
+        );
+
+        $this->db->select()
+            ->from(toColumn('a', $this->_table))
+            ->join(toColumn('b', 'auth'), 'a.auth_id = b.id', 'left')
+            ->limit(100)
+            ->order_by('a.id');
+
+        if (!empty($search['id'])) {
+             $this->db->where('a.id !=', $search['id']);
+        }
+
+        if (!empty($search['auth_strong'])) {
+             $this->db->where('b.strong >', $search['auth_strong']);
+        }
+
+        return $this->db->get()->result_array();
+    }
+
 }

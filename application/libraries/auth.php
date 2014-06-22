@@ -3,10 +3,10 @@ class auth
 {
     private $_CI = null;
 
-    public function __construct()
+    public function __construct($name = array('namespace' => 'Auth'))
     {
-        $this->_CI = get_instance();
-        $this->_CI->load->library('session', 'Auth');
+        $this->_CI = &get_instance();
+        $this->_CI->load->library('session', $name['namespace']);
     }
 
     public function hasId()

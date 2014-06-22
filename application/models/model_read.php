@@ -4,6 +4,16 @@ class Model_read extends CI_Model
 {
     private $_table = 'read';
 
+    public function exists($data)
+    {
+        $this->db->select()
+              ->from($this->_table)
+              ->where('report_id', $data['report_id'])
+              ->where('user_id', $data['user_id']);
+
+        return $this->db->get()->num_rows() === 1;
+    }
+
     public function getNum($id)
     {
         $this->db->select()
@@ -27,6 +37,19 @@ class Model_read extends CI_Model
 
 
         return $this->db->get()->result_array();
+    }
+
+    public function add($data)
+    {
+        //トランザクション開始
+        $this->db->trans_start();
+
+        $this->db->set($data);
+        $this->db->insert($this->_table);
+
+        $this->db->trans_complete();
+
+        return $this->db->trans_status();
     }
 
 }

@@ -7,11 +7,11 @@ class logout extends CI_Controller
         $this->view->setRenderLayout(false);
         $this->view->setRenderView(false);
 
-        $this->load->library('auth');
+        $this->load->library('session');
+        $this->session->destroy();
 
         $this->load->helper('url');
 
-        $this->auth->clearId();
         redirect('/');
     }
 }

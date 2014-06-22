@@ -29,4 +29,17 @@ class Model_comment extends CI_Model
         return $this->db->get()->result_array();
     }
 
+    public function add($data)
+    {
+        //トランザクション開始
+        $this->db->trans_start();
+
+        $this->db->set($data);
+        $this->db->insert($this->_table);
+
+        $this->db->trans_complete();
+
+        return $this->db->trans_status();
+    }
+
 }

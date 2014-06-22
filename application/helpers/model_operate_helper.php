@@ -15,4 +15,38 @@ if (!function_exists('toColumn'))
 
         return $name . ' as ' . $data;
     }
+
+
+}
+
+if (!function_exists('toInsert'))
+{
+    function toInsert($table, $data)
+    {
+        $columns = array();
+        $values  = array();
+        foreach ($data as $key => $val) {
+            if (strpos($key, 'NotEscape:') === false) {
+                $key = '`' . $key . '`';
+            } else {
+                $key = strtr($key, array('NotEscape:' => ''));
+            }
+
+            if (strpos($val, 'NotEscape:') === false) {
+                $val = '"' . mysql_real_escape_string($val) . '"';
+            } else {
+                $val = strtr($val, array('NotEscape:' => ''));
+            }
+
+            $values[]  = $val;
+            $columns[] = $key;
+        }
+
+        return sprintf(
+            'INSERT INTO %s (%s) VALUES (%s)',
+            $table,
+            implode(',', $columns),
+            implode(',', $values)
+        );
+    }
 }

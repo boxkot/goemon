@@ -15,7 +15,7 @@ class index extends CI_Controller
     public function index()
     {
         //ライブラリ読み込み
-        $this->load->library('auth');
+        $this->load->library('auth', array('namespace' => 'Admin'));
         $this->load->library('validate');
 
         //ヘルパー読み込み
@@ -42,4 +42,5 @@ class index extends CI_Controller
 
         $this->view->data = $data;
     }
+
 }

@@ -32,6 +32,18 @@ CREATE TABLE IF NOT EXISTS `admin` (
         FOREIGN KEY (`auth_id`) REFERENCES `auth` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_bin COMMENT '管理者';
 
+-- 仮登録管理者
+CREATE TABLE IF NOT EXISTS `interim_admin` (
+    `id`         int(10) unsigned NOT NULL auto_increment COMMENT 'ID',
+    `mail`       varchar(255)     NOT NULL                COMMENT 'メール',
+    `auth_id`    int(10) unsigned NOT NULL                COMMENT '権限ID',
+    `token`      varchar(255)     NOT NULL                COMMENT 'トークン',
+    `created_at` datetime         NOT NULL                COMMENT '作成日',
+    PRIMARY KEY (`id`),
+    CONSTRAINT `fk_interim_admin_auth_id`
+        FOREIGN KEY (`auth_id`) REFERENCES `auth` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_bin COMMENT '仮登録管理者';
+
 -- 役職
 CREATE TABLE IF NOT EXISTS `grade` (
     `id`         int(10) unsigned NOT NULL auto_increment COMMENT 'ID',
@@ -60,7 +72,7 @@ CREATE TABLE IF NOT EXISTS `user` (
     `mail`       varchar(255)     NOT NULL                COMMENT 'メール',
     `product`    text             NOT NULL DEFAULT ''     COMMENT '紹介文',
     `updated_at` timestamp        NOT NULL                COMMENT '更新日',
-    `created_at` datetime         NOT NULL                COMMENT '作成日',
+    `created_at` date             NOT NULL                COMMENT '作成日',
     PRIMARY KEY (`id`),
     UNIQUE KEY `uk_name` (`name`),
     CONSTRAINT `fk_user_grade_id`
@@ -69,24 +81,38 @@ CREATE TABLE IF NOT EXISTS `user` (
         FOREIGN KEY (`unit_id`) REFERENCES `unit` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_bin COMMENT 'ユーザー';
 
--- お気に入り
-CREATE TABLE IF NOT EXISTS `favorite` (
-    `id`        int(10) unsigned NOT NULL auto_increment COMMENT 'ID',
-    `name`      varchar(50)      NOT NULL                COMMENT '名前',
-    `user_id`   int(10) unsigned NOT NULL                COMMENT 'ユーザーID',
-    `created_at` datetime        NOT NULL                COMMENT '作成日',
+-- 仮登録ユーザー
+CREATE TABLE IF NOT EXISTS `interim_user` (
+    `id`         int(10) unsigned NOT NULL auto_increment COMMENT 'ID',
+    `mail`       varchar(255)     NOT NULL                COMMENT 'メール',
+    `token`      varchar(255)     NOT NULL                COMMENT 'トークン',
+    `created_at` datetime         NOT NULL                COMMENT '作成日',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_bin COMMENT '仮登録ユーザー';
+
+
+-- お気に入りグループ
+CREATE TABLE IF NOT EXISTS `favorite_group` (
+    `id`          int(10) unsigned NOT NULL auto_increment COMMENT 'ID',
+    `name`        varchar(50)      NOT NULL                COMMENT '名前',
+    `user_id`     int(10) unsigned NOT NULL                COMMENT 'ユーザーID',
+    `created_at`  datetime         NOT NULL                COMMENT '作成日',
     PRIMARY KEY (`id`),
-    CONSTRAINT `fk_favorite_user_id`
+    CONSTRAINT `fk_favorite_group_user_id`
         FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_bin COMMENT 'お気に入り';
+) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_bin COMMENT 'お気に入りグループ';
 
 -- お気に入りユーザー
 CREATE TABLE IF NOT EXISTS `favorite_user` (
-    `id`          int(10) unsigned NOT NULL auto_increment COMMENT 'ID',
-    `favorite_id` int(10) unsigned NOT NULL                COMMENT 'お気に入りID',
+    `id`                int(10) unsigned NOT NULL auto_increment COMMENT 'ID',
+    `user_id`           int(10) unsigned NOT NULL                COMMENT 'ユーザーID',
+    `favorite_group_id` int(10) unsigned NOT NULL                COMMENT 'お気に入りID',
     PRIMARY KEY (`id`),
-    CONSTRAINT `fk_favorite_user_favorite_id`
-        FOREIGN KEY (`favorite_id`) REFERENCES `favorite` (`id`)
+    UNIQUE KEY `uk_user_id_favorite_group_id` (`user_id`, `favorite_group_id`),
+    CONSTRAINT `fk_favorite_user_favorite_group_id`
+        FOREIGN KEY (`favorite_group_id`) REFERENCES `favorite_group` (`id`),
+    CONSTRAINT `fk_favorite_user_user_id`
+        FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET utf8 COLLATE utf8_bin COMMENT 'お気に入りユーザー';
 
 -- レポート
@@ -95,7 +121,7 @@ CREATE TABLE IF NOT EXISTS `report` (
     `user_id`    int(10) unsigned NOT NULL                COMMENT 'ユーザID',
     `title`      varchar(100)     NOT NULL                COMMENT 'タイトル',
     `content`    text             NOT NULL                COMMENT '内容',
-    `created_at` datetime         NOT NULL                COMMENT '作成日',
+    `created_at` int(10)          NOT NULL                COMMENT '作成日(UNIX_TIME)',
     PRIMARY KEY (`id`),
     CONSTRAINT `fk_report_user_id`
         FOREIGN KEY (`user_id`) REFERENCES `user` (`id`)

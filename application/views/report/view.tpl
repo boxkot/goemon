@@ -11,3 +11,10 @@
   <p>{{ user.name }}：{{ user.content }}</p>
 {% endfor %}
 </div>
+
+<div>
+  <form action="{{ site_url }}report/view/?id={{ id }}" method="post">
+    <textarea name="content"></textarea>
+    <input type="submit" value="コメント投稿">
+  </form>
+</div>
